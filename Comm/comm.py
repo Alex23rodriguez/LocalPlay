@@ -1,10 +1,11 @@
 from flask import Flask, render_template, Response, request
 import queue
+from uuid import uuid4
 
 app = Flask(__name__)
 
 @app.route('/')
-def control():
+def index():
     return render_template('index.html')
 
 class MessageAnnouncer:
@@ -24,41 +25,29 @@ class MessageAnnouncer:
             except queue.Full:
                 del self.listeners[i]
 
-announcer = MessageAnnouncer()
-
 def format_sse(data: str, event=None) -> str:
-    """Formats a string and an event name in order to follow the event stream convention.
-
-    >>> format_sse(data=json.dumps({'abc': 123}), event='Jackson 5')
-    'event: Jackson 5\\ndata: {"abc": 123}\\n\\n'
-
-    """
     msg = f'data: {data}\n\n'
     if event is not None:
         msg = f'event: {event}\n{msg}'
     return msg
 
-def make_emiter(path):
-    @app.route(f'/{path}', methods=['GET'])
-    def emiter():
-        msg = format_sse(data=request.data.decode())
-        announcer.announce(msg=msg)
-        return {}, 200
-    return emiter
-
-def make_listener(path):
-    @app.route(f'/{path}', methods=['GET'])
-    def listener():
-        def stream():
-            messages = announcer.listen()  # returns a queue.Queue
-            while True:
-                msg = messages.get()  # blocks until a new message arrives
-                yield msg
-        return Response(stream(), mimetype='text/event-stream')
-    return listener
-
+announcer = MessageAnnouncer()
+def make_emiter_listener_pair(emiter_path, listener_path):
+    exec(f'''@app.route('/{emiter_path}', methods=['POST'])
+def _{str(uuid4()).replace('-', '_')}():
+    msg = format_sse(data=request.data.decode())
+    announcer.announce(msg=msg)
+    return {{}}, 200''')
+    exec(f'''@app.route('/{listener_path}', methods=['GET'])
+def _{str(uuid4()).replace('-','_')}():
+    def stream():
+        messages = announcer.listen()
+        while True:
+            msg = messages.get()
+            yield msg
+    return Response(stream(), mimetype='text/event-stream')''')
 
 if __name__=="__main__":
-    make_emiter('test_ping')
-    make_listener('test_listen')
+    make_emiter_listener_pair('ping', 'listen')
+    make_emiter_listener_pair('ping2', 'listen2')
     app.run(host="0.0.0.0", port=5000)
