@@ -7,11 +7,10 @@ Proyect by Alex Rod.
 
 var radius = 360;
 
-var radii = []; // x, x_off, y, y_off
+let radii = [0 , 0, 0, 0]; // x, x_off, y, y_off
 var rad = [0, 0, 0, 0];
 var layers = 6;
 var nodes = 8;
-var nodeMult = 1;
 var shifts = 6;
 hues = [];
 sat = [];
@@ -21,8 +20,6 @@ colors = [];
 nums = [];
 
 var btn, ups, downs;
-
-roaming = [];
 
 rots = [];
 
@@ -113,14 +110,13 @@ function setup() {
   }
   ups = [];
   wiggle = [0,0]
-  radii = [0,0,0,0]
   radiusSpread = 1
   layerMode = 0
   strokeW = 0.5
   fade = 0.5
 
   for (i = 0; i < layers; i++) {
-    num = int(nodes * pow(nodeMult, layers - i - 1)); //number of nodes in this layer
+    num = int(nodes); //number of nodes in this layer
 
     shift = (TWO_PI / shifts / num) * (i % shifts);
 

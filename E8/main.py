@@ -49,13 +49,12 @@ def format_sse(data: str, event=None) -> str:
 
 @app.route('/ping', methods=['POST'])
 def ping():
-    msg = format_sse(data=request.data.decode())
+    msg = format_sse(data=request.data.decode(), event=request.args['attr'])
     announcer.announce(msg=msg)
     return {}, 200
 
 @app.route('/listen', methods=['GET'])
 def listen():
-
     def stream():
         messages = announcer.listen()  # returns a queue.Queue
         while True:
