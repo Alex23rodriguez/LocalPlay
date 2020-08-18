@@ -1,34 +1,33 @@
 /*
-Visualization proyect
+  Visualization proyect
 
-Proyect by Alex Rod.
-2018/06/10
+  Proyect by Alex Rod.
+  08.2020
 */
 
-var radius = 360;
+var radius = Math.min(window.innerWidth/2, window.innerHeight/2);
 
-let radii = [0 , 0, 0, 0]; // x, x_off, y, y_off
+var radii = [0 , 0, 0, 0]; // x, x_off, y, y_off
 var rad = [0, 0, 0, 0];
 var layers = 6;
 var nodes = 8;
 var shifts = 6;
-hues = [];
-sat = [];
-bright = [];
-wiggle = [];
-colors = [];
-nums = [];
+var hues = [];
+var sat = [];
+var bright = [];
+var wiggle = [];
+var colors = [];
+var nums = [];
+var rots = [];
+var points = [];
+var rot = [];
 
 var btn, ups, downs;
-
-rots = [];
 
 star = true;
 layerColors = true;
 inward = false;
 
-var points = [];
-var rot = [];
 
 function budge(points) {
   newP = points;
@@ -70,7 +69,6 @@ function drawPoints() {
         l2 = l_2;
       }
       col = [l, floor((int(l) + int(l2)) / 2), ceil((int(l) + int(l2)) / 2), l2][layerMode];
-      //print(l+' '+l2+' '+col+' '+ (l+l2))
       for (p in points[l]) {
         for (p2 in points[l2]) {
           if (layerColors) {
@@ -81,8 +79,6 @@ function drawPoints() {
           if (!star || l != l2)
             line(points[l][p].x, points[l][p].y, points[l2][p2].x, points[l2][p2].y);
         }
-        // fill(75 * l);
-        // ellipse(points[l][p].x, points[l][p].y, 3, 3)
       }
     }
   }
@@ -95,7 +91,13 @@ function addPoint(i, j) {
   });
 }
 
+function resize_canvas(){
+  radius = Math.min(window.innerWidth/2, window.innerHeight/2);
+  createCanvas(window.innerWidth, window.innerHeight);
+}
+
 function setup() {
+  // reset_config()
   colorMode(HSB, 360, 100, 100);
   createCanvas(window.innerWidth, window.innerHeight);
   background(0);
@@ -152,4 +154,24 @@ function draw() {
   rad[3] += radii[3];
 
   pop();
+}
+
+function keyPressed(){
+  if(key==='R'){
+    resize_canvas()
+  }else if(key==='F'){
+    go_fullscreen()
+  }
+}
+
+
+function go_fullscreen(){
+  docEl = document.documentElement;
+  if (docEl.requestFullscreen) {
+    docEl.requestFullscreen();
+  } else if (docEl.mozRequestFullScreen) {
+    docEl.mozRequestFullScreen();
+  } else if (docEl.webkitRequestFullscreen) {
+    docEl.webkitRequestFullscreen();
+  }
 }

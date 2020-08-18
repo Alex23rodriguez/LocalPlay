@@ -39,6 +39,8 @@ for(elem in elements){
     for(let i=0; i<dict.layers; i++){
         dom_elem.appendChild(createSliderFrom(dict, make_single_emiter(elem, i)))
     }
+    dom_elem.appendChild(document.createElement('br'))
+
     stop_func = string_together(make_set_all(elem, 0), force_update_dict[elem])
     dom_elem.appendChild(createButton('Stop', stop_func))
     rand_func = string_together(make_randomize_all(elem, dict.min, dict.max, false), force_update_dict[elem])
