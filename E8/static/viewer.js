@@ -7,26 +7,32 @@
 
 var radius = Math.min(window.innerWidth/2, window.innerHeight/2);
 
-var radii = [0 , 0, 0, 0]; // x, x_off, y, y_off
+var radii = [0 , 0, 0, 0]; // x, x_off, y, y_off   DONE
 var rad = [0, 0, 0, 0];
 var layers = 6;
 var nodes = 8;
 var shifts = 6;
-var hues = [];
+var hues = [];            // DONE
 var sat = [];
 var bright = [];
 var wiggle = [];
 var colors = [];
 var nums = [];
-var rots = [];
+var rots = [];            // DONE
 var points = [];
 var rot = [];
-
-var btn, ups, downs;
+var fade = 0.5            // DONE
 
 star = true;
 layerColors = true;
 inward = false;
+
+variables = {
+  'rots': rots,
+  'radii': radii,
+  'fade': fade,
+  'hues': hues
+}
 
 
 function budge(points) {
@@ -110,12 +116,10 @@ function setup() {
     sat.push(100)
     bright.push(50 + (50 / layers) * i)
   }
-  ups = [];
   wiggle = [0,0]
   radiusSpread = 1
   layerMode = 0
   strokeW = 0.5
-  fade = 0.5
 
   for (i = 0; i < layers; i++) {
     num = int(nodes); //number of nodes in this layer
@@ -140,7 +144,7 @@ function draw() {
 
   translate(width / 2, height / 2);
   fill(255);
-  background(0, fade);
+  background(0, variables['fade']);
   points = budge(points);
   drawPoints();
 

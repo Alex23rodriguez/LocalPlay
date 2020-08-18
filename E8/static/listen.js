@@ -1,15 +1,24 @@
 var source = new EventSource("listen");
-source.addEventListener('rots', function(event){
-    d = JSON.parse(event.data)
-    for(k in d){
-        rots[k] = parseFloat(d[k])
-    }
-})
-source.addEventListener('radii', function(event){
-    d = JSON.parse(event.data)
-    for(k in d){
-        radii[k] = parseFloat(d[k])
-    }
-})
+
+function link_list_variable(src, attr, is_int){
+    src.addEventListener(attr, function(event){
+        d = JSON.parse(event.data)
+        for(k in d){
+            variables[attr][k] = is_int ? parseInt(d[k]) : parseFloat(d[k])
+        }
+    });
+}
+
+function link_normal_variable(src, attr, is_int){
+    src.addEventListener(attr, function(event){
+        v = JSON.parse(event.data)[0]
+        variables[attr] = is_int ? parseInt(v) : parseFloat(v)
+    })
+}
+
+link_list_variable(source, 'rots')
+link_list_variable(source, 'hues')
+link_list_variable(source, 'radii')
+link_normal_variable(source, 'fade')
 
 console.log('Listener ready')
