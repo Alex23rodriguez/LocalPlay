@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="shortcut icon" href="#">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script> 
-
-    <script src="{{ url_for('static', filename='control.js') }}"></script>
+    <script src="{{ url_for('static', filename='util.js') }}"></script>
 </head>
 <body>
-    Press button to ping!
+    Rotation
+    <div id="rots_div"></div>
+    <br>
+    Radius
+    <div id="radii_div"></div>
 </body>
+    <script src="{{ url_for('static', filename='control.js') }}"></script>
 </html>
